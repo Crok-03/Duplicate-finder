@@ -9,6 +9,8 @@
 #include "core/ScanWorker.h"
 #include <QThread>
 #include "WizardPages/PageResults.h"
+#include "WizardPages/PageActions.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -29,6 +31,8 @@ private:
     QLabel *lblTitle;
     PageScan *pageScan;
     PageResults *pageResults;
+    PageActions *pageActions;
+
     // Страницы мастера
     PageSelectFolders *pageSelectFolders;
 

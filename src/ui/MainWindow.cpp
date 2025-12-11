@@ -37,8 +37,8 @@ MainWindow::MainWindow(QWidget *parent)
     pageResults = new PageResults(this);
     stack->addWidget(pageResults);         // page 2
 
-    // Заглушка / PageActions будет page 3
-    stack->addWidget(new QLabel("Шаг 4: Действия"));  // page 3
+    pageActions = new PageActions(this);
+    stack->addWidget(pageActions);    // page 3
 
     // Навигационная панель
     btnBack = new QPushButton("⬅ Назад");
@@ -96,11 +96,19 @@ void MainWindow::onNext()
         connect(worker, &ScanWorker::statsChanged,
                 pageScan, &PageScan::setStats);
 
-        // Результаты: заполняем PageResults (когда готовы)
-        connect(worker, &ScanWorker::resultsReady, this, [=](const QMap<int, QVector<FileEntry>>& groups) {
+        // Результаты: заполняем PageResults и PageActions
+        connect(worker, &ScanWorker::resultsReady, this,
+                [=](const QMap<int, QVector<FileEntry>>& groups)
+        {
+            // -----------------------------
+            // ЗАПОЛНЯЕМ ТАБЛИЦУ РЕЗУЛЬТАТОВ (Шаг 3)
+            // -----------------------------
             pageResults->clearResults();
-            for (auto groupId : groups.keys()) {
-                for (const FileEntry &f : groups[groupId]) {
+
+            for (auto groupId : groups.keys())
+            {
+                for (const FileEntry &f : groups[groupId])
+                {
                     pageResults->addResult({
                         groupId,
                         QString::number(f.size) + " B",
@@ -109,7 +117,13 @@ void MainWindow::onNext()
                     });
                 }
             }
+
+            // -----------------------------
+            // ЗАПОЛНЯЕМ СТРАНИЦУ ДЕЙСТВИЙ (Шаг 4)
+            // -----------------------------
+            pageActions->loadGroups(groups);
         });
+
 
         // Завершение сканирования → Шаг 3
         connect(worker, &ScanWorker::finished, this, [=]() {
