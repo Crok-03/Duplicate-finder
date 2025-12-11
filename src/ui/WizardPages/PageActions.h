@@ -6,6 +6,8 @@
 #include <QPushButton>
 #include <QMap>
 #include <QVector>
+#include <QJsonDocument>
+#include <QJsonArray>
 
 #include "FileEntry.h"
 
@@ -17,12 +19,6 @@ public:
     explicit PageActions(QWidget *parent = nullptr);
 
     void loadGroups(const QMap<int, QVector<FileEntry>> &groups);
-
-signals:
-    void deleteToTrash(const QVector<FileEntry> &files);
-    void deletePermanent(const QVector<FileEntry> &files);
-    void moveFiles(const QVector<FileEntry> &files);
-    void exportJson(const QVector<FileEntry> &files);
 
 private slots:
     void onGroupSelected();
@@ -42,4 +38,6 @@ private:
     QMap<int, QVector<FileEntry>> groupMap;
 
     QVector<FileEntry> getSelectedFiles() const;
+
+    static QString formatSize(qint64 bytes);
 };

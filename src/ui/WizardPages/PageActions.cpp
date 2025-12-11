@@ -3,6 +3,29 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QFileDialog>
+#include <QMessageBox>
+#include <QFile>
+#include <QJsonObject>
+
+#ifdef _WIN32
+#include <windows.h>
+#include <shlobj.h>
+#endif
+
+// ------------------ ФОРМАТИРОВАНИЕ РАЗМЕРА ------------------
+QString PageActions::formatSize(qint64 bytes)
+{
+    double size = bytes;
+    QStringList units = {"B", "KB", "MB", "GB", "TB"};
+
+    int i = 0;
+    while (size >= 1024.0 && i < units.size() - 1) {
+        size /= 1024.0;
+        i++;
+    }
+
+    return QString("%1 %2").arg(QString::number(size, 'f', 2)).arg(units[i]);
+}
 
 PageActions::PageActions(QWidget *parent)
     : QWidget(parent)
@@ -11,7 +34,7 @@ PageActions::PageActions(QWidget *parent)
 
     // ---------------- ЛЕВАЯ ПАНЕЛЬ ----------------
     groupList = new QListWidget(this);
-    groupList->setFixedWidth(200);
+    groupList->setFixedWidth(220);
     connect(groupList, &QListWidget::itemSelectionChanged,
             this, &PageActions::onGroupSelected);
 
@@ -20,6 +43,7 @@ PageActions::PageActions(QWidget *parent)
     // ---------------- ПРАВАЯ ПАНЕЛЬ ----------------
     QVBoxLayout *right = new QVBoxLayout();
 
+    // Таблица
     table = new QTableWidget(this);
     table->setColumnCount(4);
     table->setHorizontalHeaderLabels({"✔", "Размер", "Хеш", "Путь"});
@@ -78,12 +102,11 @@ void PageActions::onGroupSelected()
 
     for (int i = 0; i < files.size(); i++)
     {
-        // checkbox
         QTableWidgetItem *chk = new QTableWidgetItem();
         chk->setCheckState(Qt::Checked);
         table->setItem(i, 0, chk);
 
-        table->setItem(i, 1, new QTableWidgetItem(QString::number(files[i].size)));
+        table->setItem(i, 1, new QTableWidgetItem(formatSize(files[i].size)));
         table->setItem(i, 2, new QTableWidgetItem(files[i].fullHash.toHex()));
         table->setItem(i, 3, new QTableWidgetItem(files[i].path));
     }
@@ -93,10 +116,10 @@ QVector<FileEntry> PageActions::getSelectedFiles() const
 {
     QVector<FileEntry> selected;
 
-    int rowGroup = groupList->currentRow();
-    if (rowGroup < 0) return selected;
+    int groupRow = groupList->currentRow();
+    if (groupRow < 0) return selected;
 
-    int groupId = groupMap.keys()[rowGroup];
+    int groupId = groupMap.keys()[groupRow];
     const auto &files = groupMap[groupId];
 
     for (int i = 0; i < table->rowCount(); i++)
@@ -104,27 +127,101 @@ QVector<FileEntry> PageActions::getSelectedFiles() const
         if (table->item(i, 0)->checkState() == Qt::Checked)
             selected.append(files[i]);
     }
+
     return selected;
 }
 
-// ------------------------------ ACTION BUTTONS ------------------------------
+// ============================================================================
+//                              ОПЕРАЦИИ
+// ============================================================================
 
 void PageActions::onDeleteTrash()
 {
-    emit deleteToTrash(getSelectedFiles());
+    QVector<FileEntry> files = getSelectedFiles();
+    if (files.isEmpty()) return;
+
+#ifdef _WIN32
+    for (const FileEntry &f : files) {
+        wchar_t wPath[MAX_PATH];
+        QString q = f.path;
+        q.replace("/", "\\");
+
+        q.toWCharArray(wPath);
+        wPath[q.length()] = 0;
+        wPath[q.length() + 1] = 0; // двойной null
+
+        SHFILEOPSTRUCTW op = {0};
+        op.hwnd = nullptr;
+        op.wFunc = FO_DELETE;
+        op.pFrom = wPath;
+        op.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT;
+
+        SHFileOperationW(&op);
+    }
+#else
+    QMessageBox::warning(this, "Недоступно",
+                         "Удаление в корзину пока работает только в Windows.");
+#endif
+
+    QMessageBox::information(this, "Готово", "Файлы перемещены в корзину.");
 }
 
 void PageActions::onDeletePermanent()
 {
-    emit deletePermanent(getSelectedFiles());
+    QVector<FileEntry> files = getSelectedFiles();
+    if (files.isEmpty()) return;
+
+    for (const FileEntry &f : files)
+    {
+        QFile::remove(f.path);
+    }
+
+    QMessageBox::information(this, "Готово", "Файлы удалены навсегда.");
 }
 
 void PageActions::onMoveFiles()
 {
-    emit moveFiles(getSelectedFiles());
+    QVector<FileEntry> files = getSelectedFiles();
+    if (files.isEmpty()) return;
+
+    QString dir = QFileDialog::getExistingDirectory(this, "Выберите папку");
+    if (dir.isEmpty()) return;
+
+    for (const FileEntry &f : files)
+    {
+        QString newPath = dir + "/" + QFileInfo(f.path).fileName();
+        QFile::rename(f.path, newPath);
+    }
+
+    QMessageBox::information(this, "Готово", "Файлы перемещены.");
 }
 
 void PageActions::onExportJson()
 {
-    emit exportJson(getSelectedFiles());
+    QVector<FileEntry> files = getSelectedFiles();
+    if (files.isEmpty()) return;
+
+    QJsonArray arr;
+
+    for (const FileEntry &f : files)
+    {
+        QJsonObject obj;
+        obj["path"] = f.path;
+        obj["size"] = (double)f.size;
+        obj["hash"] = QString(f.fullHash.toHex());
+
+        arr.append(obj);
+    }
+
+    QJsonDocument doc(arr);
+
+    QString file = QFileDialog::getSaveFileName(this, "Сохранить JSON", "", "*.json");
+    if (file.isEmpty()) return;
+
+    QFile out(file);
+    out.open(QFile::WriteOnly);
+    out.write(doc.toJson());
+    out.close();
+
+    QMessageBox::information(this, "Готово", "JSON экспортирован.");
 }
