@@ -1,7 +1,13 @@
 #pragma once
+
 #include <QObject>
-#include <atomic>
 #include <QStringList>
+#include <QMap>
+#include <QVector>
+#include <atomic>
+
+#include "FileEntry.h"            // <- обязательно
+#include <QThread>                // для forward-declare/использования типов (не обязательно, но безопасно)
 
 class ScanWorker : public QObject
 {
@@ -13,11 +19,12 @@ public:
     void setFolders(const QStringList &folders);
 
 signals:
-    void progressChanged(int value);
+    void progressChanged(int value);                 // 0..100
     void currentFileChanged(const QString &file);
     void statsChanged(int scanned, int duplicates);
     void finished();
     void canceled();
+    void resultsReady(const QMap<int, QVector<FileEntry>> &groups);
 
 public slots:
     void startScan();
@@ -25,6 +32,5 @@ public slots:
 
 private:
     QStringList folders;
-
-    std::atomic<bool> cancelFlag = false;
+    std::atomic<bool> cancelFlag{false};
 };

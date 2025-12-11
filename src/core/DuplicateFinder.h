@@ -1,20 +1,13 @@
 #pragma once
-#include <QObject>
+
+#include "FileEntry.h"
 #include <QVector>
 #include <QMap>
-#include "FileEntry.h"
 
-using DuplicateGroup = QVector<FileEntry>;
-
-class DuplicateFinder : public QObject
+class DuplicateFinder
 {
-    Q_OBJECT
-
 public:
-    explicit DuplicateFinder(QObject* parent = nullptr);
-
-    QVector<DuplicateGroup> findDuplicates(const QVector<FileEntry>& files);
-
-signals:
-    void progress(int percent);
+    // вход: сырые FileEntry без хешей
+    // выход: группы дубликатов
+    static QMap<int, QVector<FileEntry>> findDuplicates(QVector<FileEntry> &files);
 };

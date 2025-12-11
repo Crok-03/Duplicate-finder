@@ -1,13 +1,12 @@
 #pragma once
 #include <QString>
-#include <QDateTime>
+#include <QFileInfo>
 
 struct FileEntry
 {
     QString path;
     qint64 size = 0;
-    QDateTime modified;
-    
-    QString quickHash; 
-    QString fullHash;  
+
+    QByteArray fastHash;   // хеш первых 64 KB
+    QByteArray fullHash;   // SHA-256 полного файла
 };

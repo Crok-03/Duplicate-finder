@@ -1,12 +1,27 @@
 #include "Hasher.h"
+#include <QCryptographicHash>
+#include <QFile>
 
-Hasher::Hasher(QObject* parent)
-    : QObject(parent)
+QByteArray Hasher::computeFastHash(const QString &path)
 {
+    QFile file(path);
+    if (!file.open(QFile::ReadOnly))
+        return {};
+
+    QByteArray data = file.read(64 * 1024); // 64 KB
+    return QCryptographicHash::hash(data, QCryptographicHash::Sha256);
 }
 
-QString Hasher::computeSHA256(const QString& path)
+QByteArray Hasher::computeFullHash(const QString &path)
 {
-    // Реализация позже
-    return {};
+    QFile file(path);
+    if (!file.open(QFile::ReadOnly))
+        return {};
+
+    QCryptographicHash hash(QCryptographicHash::Sha256);
+
+    while (!file.atEnd())
+        hash.addData(file.read(1024 * 256)); // читаем блоками по 256КБ
+
+    return hash.result();
 }

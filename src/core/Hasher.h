@@ -1,15 +1,10 @@
 #pragma once
-#include <QObject>
 #include <QString>
+#include <QByteArray>
 
-class Hasher : public QObject
+class Hasher
 {
-    Q_OBJECT
-
 public:
-    explicit Hasher(QObject* parent = nullptr);
-    QString computeSHA256(const QString& path);
-
-signals:
-    void progress(int percent);
+    static QByteArray computeFastHash(const QString &path);
+    static QByteArray computeFullHash(const QString &path);
 };
