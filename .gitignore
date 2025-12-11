@@ -1,0 +1,28 @@
+# Build
+build/
+*.exe
+*.o
+*.obj
+*.dll
+*.so
+*.dylib
+
+# Qt
+*.pro.user
+*.autosave
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+*.qrc
+*.qm
+
+# Runtime
+
+*.log
+
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*~

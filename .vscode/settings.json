@@ -1,0 +1,22 @@
+{
+    "terminal.integrated.defaultProfile.windows": "MSYS2 MinGW64",
+
+    "terminal.integrated.profiles.windows": {
+        "MSYS2 MinGW64": {
+            "path": "C:\\msys64\\usr\\bin\\bash.exe",
+            "args": ["-l", "-i"],
+            "env": {
+                "MSYSTEM": "MINGW64",
+                "CHERE_INVOKING": "1"
+            },
+            "icon": "terminal-bash"
+        }
+    },
+
+    "cmake.generator": "MinGW Makefiles",
+    "cmake.configureArgs": [
+        "-DCMAKE_PREFIX_PATH=C:/msys64/mingw64"
+    ],
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+}
