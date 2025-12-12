@@ -1,0 +1,98 @@
+[
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\DuplicateFinder_autogen\\mocs_compilation.cpp.obj -c E:\\Projects\\DuplicateFinder\\build\\DuplicateFinder_autogen\\mocs_compilation.cpp",
+  "file": "E:/Projects/DuplicateFinder/build/DuplicateFinder_autogen/mocs_compilation.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/DuplicateFinder_autogen/mocs_compilation.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\main.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\main.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/main.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/main.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\core\\Config.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\core\\Config.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/core/Config.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/core/Config.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\core\\DuplicateFinder.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\core\\DuplicateFinder.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/core/DuplicateFinder.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/core/DuplicateFinder.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\core\\FileEntry.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\core\\FileEntry.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/core/FileEntry.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/core/FileEntry.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\core\\FileOperator.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\core\\FileOperator.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/core/FileOperator.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/core/FileOperator.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\core\\Hasher.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\core\\Hasher.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/core/Hasher.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/core/Hasher.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\core\\Logger.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\core\\Logger.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/core/Logger.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/core/Logger.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\core\\ScanWorker.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\core\\ScanWorker.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/core/ScanWorker.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/core/ScanWorker.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\core\\Scanner.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\core\\Scanner.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/core/Scanner.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/core/Scanner.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\ui\\MainWindow.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\ui\\MainWindow.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/ui/MainWindow.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/ui/MainWindow.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\ui\\WizardPages\\PageActions.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\ui\\WizardPages\\PageActions.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/ui/WizardPages/PageActions.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/ui/WizardPages/PageActions.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\ui\\WizardPages\\PageResults.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\ui\\WizardPages\\PageResults.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/ui/WizardPages/PageResults.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/ui/WizardPages/PageResults.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\ui\\WizardPages\\PageScan.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\ui\\WizardPages\\PageScan.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/ui/WizardPages/PageScan.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/ui/WizardPages/PageScan.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\src\\ui\\WizardPages\\PageSelectFolders.cpp.obj -c E:\\Projects\\DuplicateFinder\\src\\ui\\WizardPages\\PageSelectFolders.cpp",
+  "file": "E:/Projects/DuplicateFinder/src/ui/WizardPages/PageSelectFolders.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/src/ui/WizardPages/PageSelectFolders.cpp.obj"
+},
+{
+  "directory": "E:/Projects/DuplicateFinder/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -DWINVER=0x0A00 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN32_WINNT=0x0A00 -D_WIN64 @CMakeFiles/DuplicateFinder.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\DuplicateFinder.dir\\DuplicateFinder_autogen\\EWIEGA46WW\\qrc_resources.cpp.obj -c E:\\Projects\\DuplicateFinder\\build\\DuplicateFinder_autogen\\EWIEGA46WW\\qrc_resources.cpp",
+  "file": "E:/Projects/DuplicateFinder/build/DuplicateFinder_autogen/EWIEGA46WW/qrc_resources.cpp",
+  "output": "CMakeFiles/DuplicateFinder.dir/DuplicateFinder_autogen/EWIEGA46WW/qrc_resources.cpp.obj"
+}
+]
