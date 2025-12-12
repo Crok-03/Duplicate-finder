@@ -27,8 +27,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/src/core
     ${CMAKE_SOURCE_DIR}/src/ui
     ${CMAKE_SOURCE_DIR}/src/ui/WizardPages
-    ${CMAKE_SOURCE_DIR}/resources
-    ${CMAKE_SOURCE_DIR}/resources/icons
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets)

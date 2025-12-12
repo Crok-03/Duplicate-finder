@@ -61,12 +61,6 @@ PageActions::PageActions(QWidget *parent)
     btnMove = new QPushButton("Переместить…");
     btnExport = new QPushButton("Экспорт JSON");
 
-    // Устанавливаем иконки (будут взяты из resources.qrc)
-    btnTrash->setIcon(QIcon(":/icons/trash.png"));
-    btnDelete->setIcon(QIcon(":/icons/delete.png"));
-    btnMove->setIcon(QIcon(":/icons/move.png"));
-    btnExport->setIcon(QIcon(":/icons/export.png"));
-
     connect(btnTrash, &QPushButton::clicked, this, &PageActions::onDeleteTrash);
     connect(btnDelete, &QPushButton::clicked, this, &PageActions::onDeletePermanent);
     connect(btnMove, &QPushButton::clicked, this, &PageActions::onMoveFiles);

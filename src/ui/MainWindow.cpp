@@ -13,7 +13,6 @@
 #include <QThread>
 
 #include <QDebug>
-#include <QResource>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -63,14 +62,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     currentPage = 0;
     updateStepTitle();
-     // ---------------------------------------
-    // 🔥 Проверка загрузки ресурсов
-    // ---------------------------------------
-    qDebug() << "trash:" << QFile(":/icons/trash.png").exists();
-    qDebug() << "delete:" << QFile(":/icons/delete.png").exists();
-    qDebug() << "move:" << QFile(":/icons/move.png").exists();
-    qDebug() << "export:" << QFile(":/icons/export.png").exists();
-
 }
 
 // ---------------------- onNext ----------------------
