@@ -3,6 +3,7 @@
 #include "WizardPages/PageSelectFolders.h"
 #include "WizardPages/PageScan.h"
 #include "WizardPages/PageResults.h"
+#include "WizardPages/PageActions.h"
 #include "core/ScanWorker.h"
 
 #include <QVBoxLayout>
@@ -11,6 +12,8 @@
 #include <QMessageBox>
 #include <QThread>
 
+#include <QDebug>
+#include <QResource>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -25,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     lblTitle->setAlignment(Qt::AlignCenter);
     lblTitle->setStyleSheet("font-size: 20px; font-weight: bold; padding: 10px;");
 
-    // Страницы мастера
+    // Страницы
     stack = new QStackedWidget(this);
 
     pageSelectFolders = new PageSelectFolders(this);
@@ -38,11 +41,11 @@ MainWindow::MainWindow(QWidget *parent)
     stack->addWidget(pageResults);         // page 2
 
     pageActions = new PageActions(this);
-    stack->addWidget(pageActions);    // page 3
+    stack->addWidget(pageActions);         // page 3
 
-    // Навигационная панель
+    // Навигация
     btnBack = new QPushButton("⬅ Назад");
-    btnNext = new QPushButton("Сканировать ➡");   // вместо Далее
+    btnNext = new QPushButton("Сканировать ➡");
 
     btnBack->setEnabled(false);
 
@@ -56,20 +59,26 @@ MainWindow::MainWindow(QWidget *parent)
 
     layout->addWidget(stack);
     layout->addLayout(navLayout);
-
     setCentralWidget(central);
 
-    // Инициализация состояний
     currentPage = 0;
     updateStepTitle();
+     // ---------------------------------------
+    // 🔥 Проверка загрузки ресурсов
+    // ---------------------------------------
+    qDebug() << "trash:" << QFile(":/icons/trash.png").exists();
+    qDebug() << "delete:" << QFile(":/icons/delete.png").exists();
+    qDebug() << "move:" << QFile(":/icons/move.png").exists();
+    qDebug() << "export:" << QFile(":/icons/export.png").exists();
+
 }
 
 // ---------------------- onNext ----------------------
 void MainWindow::onNext()
 {
-    // -----------------------------------------
+    //
     // ШАГ 1 → ШАГ 2 (запуск сканирования)
-    // -----------------------------------------
+    //
     if (currentPage == 0)
     {
         QStringList folders = pageSelectFolders->getSelectedFolders();
@@ -79,32 +88,32 @@ void MainWindow::onNext()
             return;
         }
 
-        // Создаем поток и воркер
+        // Создаём поток и воркер
         scanThread = new QThread(this);
         worker = new ScanWorker();
         worker->setFolders(folders);
         worker->moveToThread(scanThread);
 
-        // Запуск сканирования при старте потока
+        // Сигналы сканирования
         connect(scanThread, &QThread::started, worker, &ScanWorker::startScan);
 
-        // Обновление UI (PageScan)
         connect(worker, &ScanWorker::progressChanged,
                 pageScan, &PageScan::setProgress);
+
         connect(worker, &ScanWorker::currentFileChanged,
                 pageScan, &PageScan::setCurrentFile);
+
         connect(worker, &ScanWorker::statsChanged,
                 pageScan, &PageScan::setStats);
 
-        // Результаты: заполняем PageResults и PageActions
-        connect(worker, &ScanWorker::resultsReady, this,
-                [=](const QMap<int, QVector<FileEntry>>& groups)
+        //
+        // После готовности результатов
+        //
+        connect(worker, &ScanWorker::resultsReady,
+                this, [=](const QMap<int, QVector<FileEntry>> &groups)
         {
-            // -----------------------------
-            // ЗАПОЛНЯЕМ ТАБЛИЦУ РЕЗУЛЬТАТОВ (Шаг 3)
-            // -----------------------------
+            // Страница результатов
             pageResults->clearResults();
-
             for (auto groupId : groups.keys())
             {
                 for (const FileEntry &f : groups[groupId])
@@ -118,76 +127,90 @@ void MainWindow::onNext()
                 }
             }
 
-            // -----------------------------
-            // ЗАПОЛНЯЕМ СТРАНИЦУ ДЕЙСТВИЙ (Шаг 4)
-            // -----------------------------
+            // Страница действий
             pageActions->loadGroups(groups);
         });
 
-
-        // Завершение сканирования → Шаг 3
-        connect(worker, &ScanWorker::finished, this, [=]() {
-            // Останавливаем поток/убираем воркера
+        //
+        // Завершение сканирования → переход на страницу 3
+        //
+        connect(worker, &ScanWorker::finished, this, [=]()
+        {
             if (scanThread->isRunning()) {
                 scanThread->quit();
                 scanThread->wait();
             }
+
             worker->deleteLater();
             scanThread->deleteLater();
+            worker = nullptr;
+            scanThread = nullptr;
 
-            currentPage = 2; // PageResults
-            stack->setCurrentIndex(currentPage);
+            currentPage = 2;
+            stack->setCurrentIndex(2);
             updateStepTitle();
         });
 
-        // Отмена
-        connect(worker, &ScanWorker::canceled, this, [=]() {
+        //
+        // Отмена сканирования
+        //
+        connect(worker, &ScanWorker::canceled, this, [=]()
+        {
             if (scanThread->isRunning()) {
                 scanThread->quit();
                 scanThread->wait();
             }
+
             worker->deleteLater();
             scanThread->deleteLater();
+            worker = nullptr;
+            scanThread = nullptr;
+
             QMessageBox::information(this, "Отменено",
                                      "Сканирование отменено пользователем.");
-            // Возвращаемся на страницу выбора папок (0) или оставляем на странице сканирования — по желанию
+
             currentPage = 0;
-            stack->setCurrentIndex(currentPage);
+            stack->setCurrentIndex(0);
             updateStepTitle();
         });
 
-        // Кнопка отмены на самой странице PageScan вызывает requestCancel
         connect(pageScan, &PageScan::cancelRequested,
                 worker, &ScanWorker::requestCancel);
 
-        // Переходим на шаг 1 -> 2 (сканирование)
+        // Переключаемся на страницу сканирования
         currentPage = 1;
-        stack->setCurrentIndex(currentPage);
+        stack->setCurrentIndex(1);
         updateStepTitle();
 
         scanThread->start();
         return;
     }
 
-    // -----------------------------------------
-    // ШАГ 2 → (запрещено переходить вручную)
-    // переход на шаг 3 выполняется только worker->finished
-    // -----------------------------------------
+    //
+    // ШАГ 2 — пропускается (управляется сканированием)
+    //
 
-    // -----------------------------------------
+    //
     // ШАГ 3 → ШАГ 4
-    // -----------------------------------------
+    //
     if (currentPage == 2)
     {
         currentPage = 3;
-        stack->setCurrentIndex(currentPage);
+        stack->setCurrentIndex(3);
         updateStepTitle();
         return;
     }
 
-    // -----------------------------------------
-    // ШАГ 4 → (дальше нет)
-    // -----------------------------------------
+    //
+    // ШАГ 4 → В НАЧАЛО
+    //
+    if (currentPage == 3)
+    {
+        currentPage = 0;
+        stack->setCurrentIndex(0);
+        updateStepTitle();
+        return;
+    }
 }
 
 // ---------------------- onBack ----------------------
@@ -196,14 +219,22 @@ void MainWindow::onBack()
     if (currentPage == 0)
         return;
 
-    // Если в процессе сканирования — запрещаем возврат
+    // Нельзя назад во время сканирования
     if (currentPage == 1 && scanThread && scanThread->isRunning()) {
         QMessageBox::warning(this, "Ошибка",
                              "Нельзя вернуться назад во время сканирования.");
         return;
     }
 
-    // Просто уходим на предыдущую страницу
+    // Шаг 3 → назад → сразу в начало
+    if (currentPage == 2) {
+        currentPage = 0;
+        stack->setCurrentIndex(0);
+        updateStepTitle();
+        return;
+    }
+
+    // обычный переход
     currentPage--;
     stack->setCurrentIndex(currentPage);
     updateStepTitle();
@@ -223,7 +254,6 @@ void MainWindow::updateStepTitle()
         case 1:
             lblTitle->setText("Шаг 2: Сканирование");
             btnNext->setText("Далее ➡");
-            // во время сканирования по умолчанию отключаем назад
             btnBack->setEnabled(false);
             break;
 
@@ -237,10 +267,6 @@ void MainWindow::updateStepTitle()
             lblTitle->setText("Шаг 4: Действия");
             btnNext->setText("Готово");
             btnBack->setEnabled(true);
-            break;
-
-        default:
-            lblTitle->setText("");
             break;
     }
 }

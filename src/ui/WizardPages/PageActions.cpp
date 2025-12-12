@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QJsonObject>
+#include <QIcon>
+#include <QFileInfo>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -43,7 +45,6 @@ PageActions::PageActions(QWidget *parent)
     // ---------------- ПРАВАЯ ПАНЕЛЬ ----------------
     QVBoxLayout *right = new QVBoxLayout();
 
-    // Таблица
     table = new QTableWidget(this);
     table->setColumnCount(4);
     table->setHorizontalHeaderLabels({"✔", "Размер", "Хеш", "Путь"});
@@ -59,6 +60,12 @@ PageActions::PageActions(QWidget *parent)
     btnDelete = new QPushButton("Удалить навсегда");
     btnMove = new QPushButton("Переместить…");
     btnExport = new QPushButton("Экспорт JSON");
+
+    // Устанавливаем иконки (будут взяты из resources.qrc)
+    btnTrash->setIcon(QIcon(":/icons/trash.png"));
+    btnDelete->setIcon(QIcon(":/icons/delete.png"));
+    btnMove->setIcon(QIcon(":/icons/move.png"));
+    btnExport->setIcon(QIcon(":/icons/export.png"));
 
     connect(btnTrash, &QPushButton::clicked, this, &PageActions::onDeleteTrash);
     connect(btnDelete, &QPushButton::clicked, this, &PageActions::onDeletePermanent);
@@ -84,6 +91,15 @@ void PageActions::loadGroups(const QMap<int, QVector<FileEntry>> &groups)
         groupList->addItem(QString("Группа %1 (%2 файлов)")
                            .arg(id)
                            .arg(groups[id].size()));
+    }
+
+    // Если список не пуст — выбрать первую группу автоматически
+    if (!groupMap.isEmpty()) {
+        groupList->setCurrentRow(0);
+        onGroupSelected();
+    } else {
+        table->clearContents();
+        table->setRowCount(0);
     }
 }
 
@@ -124,36 +140,97 @@ QVector<FileEntry> PageActions::getSelectedFiles() const
 
     for (int i = 0; i < table->rowCount(); i++)
     {
-        if (table->item(i, 0)->checkState() == Qt::Checked)
+        QTableWidgetItem *it = table->item(i, 0);
+        if (it && it->checkState() == Qt::Checked)
             selected.append(files[i]);
     }
 
     return selected;
 }
 
+
+// ============================================================================
+// Helper: удаляем отмеченные файлы из groupMap и обновляем UI немедленно
+// ============================================================================
+static void removeSelectedFromCurrentGroup(QMap<int, QVector<FileEntry>> &groupMap,
+                                           QListWidget *groupList,
+                                           QTableWidget *table)
+{
+    int groupRow = groupList->currentRow();
+    if (groupRow < 0) return;
+
+    int groupId = groupMap.keys()[groupRow];
+    auto &files = groupMap[groupId];
+
+    // Собираем пути для удаления
+    QVector<QString> pathsToDelete;
+    for (int i = 0; i < table->rowCount(); ++i) {
+        QTableWidgetItem *it = table->item(i, 0);
+        if (it && it->checkState() == Qt::Checked) {
+            if (i < files.size())
+                pathsToDelete.append(files[i].path);
+        }
+    }
+
+    if (pathsToDelete.isEmpty()) return;
+
+    // Удаляем элементы по путям
+    QVector<FileEntry> newFiles;
+    newFiles.reserve(files.size());
+    for (const FileEntry &f : files) {
+        if (!pathsToDelete.contains(f.path))
+            newFiles.append(f);
+    }
+    files = newFiles;
+
+    // Если группа опустела — удаляем её из map и списка
+    if (files.isEmpty()) {
+        groupMap.remove(groupId);
+        delete groupList->takeItem(groupRow);
+        table->clearContents();
+        table->setRowCount(0);
+
+        // Если остались другие группы — выделяем ближайшую
+        if (groupList->count() > 0) {
+            int newRow = qMin(groupRow, groupList->count() - 1);
+            groupList->setCurrentRow(newRow);
+        }
+    } else {
+        // Обновляем таблицу текущей группы на лету (новый список files уже установлен)
+        table->clearContents();
+        table->setRowCount(files.size());
+        for (int i = 0; i < files.size(); ++i) {
+            QTableWidgetItem *chk = new QTableWidgetItem();
+            chk->setCheckState(Qt::Unchecked);
+            table->setItem(i, 0, chk);
+            table->setItem(i, 1, new QTableWidgetItem(PageActions::formatSize(files[i].size)));
+            table->setItem(i, 2, new QTableWidgetItem(files[i].fullHash.toHex()));
+            table->setItem(i, 3, new QTableWidgetItem(files[i].path));
+        }
+    }
+}
+
+
 // ============================================================================
 //                              ОПЕРАЦИИ
 // ============================================================================
-
 void PageActions::onDeleteTrash()
 {
     QVector<FileEntry> files = getSelectedFiles();
     if (files.isEmpty()) return;
 
 #ifdef _WIN32
+    // Для Windows: использовать SHFileOperationW для перемещения в корзину
     for (const FileEntry &f : files) {
-        wchar_t wPath[MAX_PATH];
         QString q = f.path;
-        q.replace("/", "\\");
-
-        q.toWCharArray(wPath);
-        wPath[q.length()] = 0;
-        wPath[q.length() + 1] = 0; // двойной null
+        // Windows expects double-null-terminated wide string
+        std::wstring wpath = q.replace("/", "\\").toStdWString();
+        std::wstring wpath2 = wpath + L'\0';
 
         SHFILEOPSTRUCTW op = {0};
         op.hwnd = nullptr;
         op.wFunc = FO_DELETE;
-        op.pFrom = wPath;
+        op.pFrom = wpath2.c_str();
         op.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT;
 
         SHFileOperationW(&op);
@@ -162,6 +239,9 @@ void PageActions::onDeleteTrash()
     QMessageBox::warning(this, "Недоступно",
                          "Удаление в корзину пока работает только в Windows.");
 #endif
+
+    // Обновляем группу и UI немедленно
+    removeSelectedFromCurrentGroup(groupMap, groupList, table);
 
     QMessageBox::information(this, "Готово", "Файлы перемещены в корзину.");
 }
@@ -172,9 +252,10 @@ void PageActions::onDeletePermanent()
     if (files.isEmpty()) return;
 
     for (const FileEntry &f : files)
-    {
         QFile::remove(f.path);
-    }
+
+    // Обновляем группу и UI немедленно
+    removeSelectedFromCurrentGroup(groupMap, groupList, table);
 
     QMessageBox::information(this, "Готово", "Файлы удалены навсегда.");
 }
@@ -192,6 +273,9 @@ void PageActions::onMoveFiles()
         QString newPath = dir + "/" + QFileInfo(f.path).fileName();
         QFile::rename(f.path, newPath);
     }
+
+    // Обновляем группу и UI немедленно
+    removeSelectedFromCurrentGroup(groupMap, groupList, table);
 
     QMessageBox::information(this, "Готово", "Файлы перемещены.");
 }
@@ -219,7 +303,11 @@ void PageActions::onExportJson()
     if (file.isEmpty()) return;
 
     QFile out(file);
-    out.open(QFile::WriteOnly);
+    if (!out.open(QFile::WriteOnly)) {
+        QMessageBox::warning(this, "Ошибка", "Не удалось открыть файл для записи!");
+        return;
+    }
+
     out.write(doc.toJson());
     out.close();
 

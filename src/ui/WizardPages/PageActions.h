@@ -20,6 +20,8 @@ public:
 
     void loadGroups(const QMap<int, QVector<FileEntry>> &groups);
 
+    static QString formatSize(qint64 bytes);   // ← ПЕРЕНЕСЁН ИЗ private В public
+
 private slots:
     void onGroupSelected();
     void onDeleteTrash();
@@ -38,6 +40,4 @@ private:
     QMap<int, QVector<FileEntry>> groupMap;
 
     QVector<FileEntry> getSelectedFiles() const;
-
-    static QString formatSize(qint64 bytes);
 };
